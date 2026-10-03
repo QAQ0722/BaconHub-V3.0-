@@ -1,6 +1,4 @@
--- Bacon Hub V3 / Rayfield Gen2. Author: QAQ0722 (original hub).
--- Rebuilt lifecycle, bounded startup, event-driven visuals, mobile controls.
--- Remote modules are original links and have independent lifecycles.
+-- Bacon Hub V3 / Author: QAQ0722.
 local Players = game:GetService('Players')
 local Run = game:GetService('RunService')
 local Input = game:GetService('UserInputService')
@@ -49,8 +47,7 @@ local function notify(message)
         safe('Notification', function() app.window:Notify({title='🥓 培根 V3',content=message}) end)
     end
 end
--- Cancels our waiting worker, not necessarily the executor's underlying network request.
--- Late responses can never initialize a second window or mutate an unloaded hub.
+
 local function bounded(name, seconds, fn)
     local done, ok, result = false, false, nil
     local worker = task.spawn(function()
@@ -217,7 +214,7 @@ connect(Players.PlayerRemoving,function(p)
 end)
 for _,p in ipairs(Players:GetPlayers()) do addPlayer(p) end
 log('OK','Player/character cache initialized')
--- V2 player tools, scoped lifecycle; no shared global loop or unrelated animation stops.
+
 local TweenService=game:GetService('TweenService')
 local selectedPlayer,refreshPlayerList
 local action
@@ -286,7 +283,7 @@ local function startPlayerAction(mode)
                 if not a.target then stopPlayerAction(); notify('目前沒有其他玩家'); return end
             end
         else
-            -- Animation failure is logged; positioning still works.
+
             safe('V2 action animation',function()
                 a.animation=make('Animation',{AnimationId='rbxassetid://189854234'})
                 local animator=h:FindFirstChildOfClass('Animator')
@@ -346,7 +343,7 @@ local function buildPlayerTools(tab)
     local selectedText=tab:CreateText({name='目前目標',text='尚未選擇玩家'})
     local rows={}
     local query=''
-    -- Cache one native element per UserId. Refresh never archives duplicate rows.
+
     app.ClosePlayerPicker=function() table.clear(rows) end
     refreshPlayerList=function()
         if not app.alive then return end
